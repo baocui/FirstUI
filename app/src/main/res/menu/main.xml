@@ -1,0 +1,5 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:title="条目一" />
+    <item android:title="条目二" />
+    <item android:title="条目三" />
+</menu>

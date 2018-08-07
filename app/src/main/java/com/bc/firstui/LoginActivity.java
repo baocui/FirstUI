@@ -1,8 +1,10 @@
 package com.bc.firstui;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import butterknife.BindView;
@@ -31,16 +33,29 @@ public class LoginActivity extends AppCompatActivity {
      * 初始化toolbar
      */
     private void initToolbarView() {
+        //设置title要在setSupportActionBar之前
         mToolbar.setTitle("登录");
+        setSupportActionBar(mToolbar);
+        //setNavigationOnClickListener要在setSupportActionBar之后
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
             }
         });
-        setSupportActionBar(mToolbar);
         //显示返回的按钮
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
