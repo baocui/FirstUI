@@ -43,6 +43,18 @@ public class LoginActivity extends AppCompatActivity {
                 finish();
             }
         });
+        mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.menu_setting:
+                        break;
+                    default:
+                        break;
+                }
+                return true;
+            }
+        });
         //显示返回的按钮
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
