@@ -7,6 +7,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.bc.firstui.util.ToastUtil;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -48,6 +50,7 @@ public class LoginActivity extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.menu_setting:
+                        ToastUtil.getInstance(LoginActivity.this).toast("点击了设置");
                         break;
                     default:
                         break;

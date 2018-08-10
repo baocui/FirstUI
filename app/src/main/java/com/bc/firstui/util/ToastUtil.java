@@ -17,16 +17,18 @@
 package com.bc.firstui.util;
 
 import android.content.Context;
+import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.nl.util.NLUtil;
-import com.nl.util.R;
-import com.nl.util.app.AppExecutors;
-import com.nl.util.resource.ResUtils;
+import com.bc.firstui.R;
+
+import java.util.concurrent.Executor;
+
 
 /**
  * <pre>
@@ -39,16 +41,22 @@ import com.nl.util.resource.ResUtils;
 public class ToastUtil {
     private static ToastUtil mInstance = null;
     private Toast mToast = null;
+    private static Context mContext;
+    /**
+     * 主线程
+     */
+    private static Executor mMainThread = null;
 
-    private ToastUtil() {
-
+    private ToastUtil(Context context) {
+        mContext = context.getApplicationContext();
+        mMainThread = new MainThreadExecutor();
     }
 
-    public static ToastUtil getInstance() {
+    public static ToastUtil getInstance(Context context) {
         if (mInstance == null) {
             synchronized (ToastUtil.class) {
                 if (mInstance == null) {
-                    mInstance = new ToastUtil();
+                    mInstance = new ToastUtil(context);
                 }
             }
         }
@@ -70,7 +78,7 @@ public class ToastUtil {
      * @param resourceId
      */
     public static void toast(int resourceId) {
-        toast(ResUtils.getString(resourceId), Toast.LENGTH_SHORT);
+        toast(mContext.getString(resourceId), Toast.LENGTH_SHORT);
     }
 
     /**
@@ -81,12 +89,12 @@ public class ToastUtil {
      */
     public static void toast(final String msg, final int duration) {
         if (Looper.getMainLooper() == Looper.myLooper()) {
-            ToastUtil.getInstance().showToast(msg, duration);
+            ToastUtil.getInstance(mContext).showToast(msg, duration);
         } else {
-            AppExecutors.get().mainThread().execute(new Runnable() {
+            mMainThread.execute(new Runnable() {
                 @Override
                 public void run() {
-                    ToastUtil.getInstance().showToast(msg, duration);
+                    ToastUtil.getInstance(mContext).showToast(msg, duration);
                 }
             });
         }
@@ -100,7 +108,7 @@ public class ToastUtil {
      */
     public void showToast(String text, int duration) {
         if (mToast == null) {
-            mToast = makeText(NLUtil.getContext(), text, duration);
+            mToast = makeText(mContext, text, duration);
         } else {
             ((TextView) mToast.getView().findViewById(R.id.tv_info)).setText(text);
         }
@@ -118,6 +126,14 @@ public class ToastUtil {
         return toast;
     }
 
+    private static class MainThreadExecutor implements Executor {
+        private Handler mainThreadHandler = new Handler(Looper.getMainLooper());
+
+        @Override
+        public void execute(@NonNull Runnable command) {
+            mainThreadHandler.post(command);
+        }
+    }
     public void cancelToast() {
         if (mToast != null) {
             mToast.cancel();
