@@ -52,6 +52,9 @@ public class LoginActivity extends AppCompatActivity {
                     case R.id.menu_setting:
                         ToastUtil.getInstance(LoginActivity.this).toast("点击了设置");
                         break;
+                    case R.id.menu_loginout:
+                        ToastUtil.getInstance(LoginActivity.this).toast("点击了退出");
+                        break;
                     default:
                         break;
                 }
@@ -64,7 +67,7 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.menu_login, menu);
         return true;
     }
 
