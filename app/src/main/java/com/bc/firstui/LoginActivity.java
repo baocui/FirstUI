@@ -1,5 +1,7 @@
 package com.bc.firstui;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -7,7 +9,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.bc.firstui.util.ReopenAppUtils;
 import com.bc.firstui.util.ToastUtil;
+import com.tencent.tinker.lib.tinker.TinkerInstaller;
+import com.xuexiang.xutil.app.ActivityUtils;
+import com.xuexiang.xutil.app.IntentUtils;
+import com.xuexiang.xutil.app.PathUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -16,7 +23,9 @@ import butterknife.Unbinder;
 /**
  * 登录
  */
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
+
+    private static final int REQUEST_CODE_GET_PATCH_PACKAGE = 20;
 
     private Unbinder mUnbinder;
 
@@ -80,5 +89,31 @@ public class LoginActivity extends AppCompatActivity {
     protected void onDestroy() {
         mUnbinder.unbind();
         super.onDestroy();
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_fix:
+                ActivityUtils.startActivityForResult(this, IntentUtils.getDocumentPickerIntent(IntentUtils.DocumentType.ANY), REQUEST_CODE_GET_PATCH_PACKAGE);
+                break;
+            case R.id.btn_reopen:
+                ReopenAppUtils.reopenApp(this);
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    @SuppressLint("MissingPermission")
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK || requestCode == REQUEST_CODE_GET_PATCH_PACKAGE) {
+            if (data != null) {
+                String path = PathUtils.getFilePathByUri(data.getData());
+                TinkerInstaller.onReceiveUpgradePatch(getApplicationContext(), path);
+            }
+        }
     }
 }
