@@ -1,7 +1,6 @@
 package com.bc.firstui;
 
 import android.app.Application;
-import android.util.Log;
 
 import com.tencent.tinker.lib.service.PatchResult;
 import com.tencent.tinker.loader.app.ApplicationLike;
@@ -9,14 +8,13 @@ import com.tinkerpatch.sdk.TinkerPatch;
 import com.tinkerpatch.sdk.loader.TinkerPatchApplicationLike;
 import com.tinkerpatch.sdk.tinker.callback.ResultCallBack;
 import com.xuexiang.xutil.XUtil;
-import com.xuexiang.xutil.net.JsonUtil;
 import com.xuexiang.xutil.tip.ToastUtils;
 
 /**
  * @author xuexiang
  * @since 2018/8/10 下午3:59
  */
-public class App extends Application {
+public class MyApplication extends Application {
 
     @Override
     public void onCreate() {
@@ -35,7 +33,6 @@ public class App extends Application {
                 .setPatchResultCallback(new ResultCallBack() {
                     @Override
                     public void onPatchResult(PatchResult patchResult) {
-                        Log.e("baocui", "patchResult: " + JsonUtil.toJson(patchResult));
                         ToastUtils.toast("补丁修复:" + (patchResult.isSuccess ? "成功" : "失败"));
                     }
                 })

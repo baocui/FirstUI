@@ -11,6 +11,7 @@ import android.view.View;
 
 import com.bc.firstui.util.ReopenAppUtils;
 import com.bc.firstui.util.ToastUtil;
+import com.noober.background.BackgroundLibrary;
 import com.tencent.tinker.lib.tinker.TinkerInstaller;
 import com.xuexiang.xutil.app.ActivityUtils;
 import com.xuexiang.xutil.app.IntentUtils;
@@ -34,6 +35,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        BackgroundLibrary.inject(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         mUnbinder = ButterKnife.bind(this);

@@ -49,10 +49,13 @@ dependencies {
     implementation 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 
-    //若使用annotation需要单独引用,对于tinker的其他库都无需再引用
+    //tinker热修复依赖
     annotationProcessor 'com.tinkerpatch.tinker:tinker-android-anno:1.9.8'
     compileOnly 'com.tinkerpatch.tinker:tinker-android-anno:1.9.8'
     implementation 'com.tinkerpatch.sdk:tinkerpatch-android-sdk:1.2.8'
+    //引用https://github.com/JavaNoober/BackgroundLibrary
+    implementation 'com.noober.background:core:1.2.2'
 
+    //xx的util工具类依赖
     implementation 'com.github.xuexiangjys.XUtil:xutil-core:1.1.4'
 }
