@@ -3,33 +3,8 @@ package com.bc.firstui.net.response;
 /**
  * @author bc on 2018/10/11.
  */
-public class LoginResponseEntity {
-    /**
-     *
-     */
-    public String Token;
+public class LoginResponseEntity extends BaseResponseEntity {
 
-    /**
-     *
-     */
-    public Long Id;
+    public UserInfo Data;
 
-    /**
-     *
-     */
-    public String Name;
-
-    /**
-     *
-     */
-    public String LoginName;
-
-    /**
-     * PcUser=0, MobileUser=1, Device=2, SubSystem=3
-     */
-    public Integer LoginType;
-    /**
-     * 客户端自己加的
-     */
-    public String Password;
 }

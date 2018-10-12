@@ -5,10 +5,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 
+import com.bc.firstui.net.IApi;
+import com.bc.firstui.net.NetManager;
+import com.bc.firstui.net.response.LoginResponseEntity;
 import com.bc.firstui.util.ReopenAppUtils;
 import com.bc.firstui.util.ToastUtil;
 import com.noober.background.BackgroundLibrary;
@@ -16,10 +22,14 @@ import com.tencent.tinker.lib.tinker.TinkerInstaller;
 import com.xuexiang.xutil.app.ActivityUtils;
 import com.xuexiang.xutil.app.IntentUtils;
 import com.xuexiang.xutil.app.PathUtils;
+import com.xuexiang.xutil.net.JsonUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * 登录
@@ -32,6 +42,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
+
+    @BindView(R.id.et_name)
+    EditText mEtName;
+
+    @BindView(R.id.et_password)
+    EditText mEtPassword;
+
+    @BindView(R.id.btn_login)
+    Button mBtnLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,9 +121,29 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             case R.id.btn_reopen:
                 ReopenAppUtils.reopenApp(this);
                 break;
+            case R.id.btn_login:
+                login();
+                break;
             default:
                 break;
         }
+    }
+
+    private void login() {
+        IApi api = NetManager.getInstance().getRetrofit().create(IApi.class);
+        Call<LoginResponseEntity> call = api.loginPost(mEtName.getText().toString().trim(), mEtPassword.getText().toString().trim());
+        call.enqueue(new Callback<LoginResponseEntity>() {
+            @Override
+            public void onResponse(Call<LoginResponseEntity> call, Response<LoginResponseEntity> response) {
+                LoginResponseEntity entity = response.body();
+                Log.e("baocui", "onResponse: " + JsonUtil.toJson(entity.Data));
+            }
+
+            @Override
+            public void onFailure(Call<LoginResponseEntity> call, Throwable t) {
+                Log.e("baocui", "onFailure" + t.getMessage());
+            }
+        });
     }
 
     @Override

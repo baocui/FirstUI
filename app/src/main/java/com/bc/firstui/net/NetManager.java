@@ -10,7 +10,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class NetManager {
 
-    public static final String BASE_URL = "http://192.168.5.248:30090/siropenapi/";
+    public static final String BASE_URL = "http://192.168.5.248:30090/";
     private static volatile NetManager mInstance;
     private Retrofit mRetrofit;
 
