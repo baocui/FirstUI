@@ -2,6 +2,7 @@ package com.bc.firstui.net;
 
 import com.bc.firstui.net.response.LoginResponseEntity;
 
+import io.reactivex.Observable;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -15,10 +16,18 @@ import retrofit2.http.Query;
 public interface IApi {
 
     @GET("siropenapi/UserAccount/Login")
-    Call<LoginResponseEntity> loginGet (@Query("userName") String userName, @Query("password") String password);
+    Call<LoginResponseEntity> loginGet(@Query("userName") String userName, @Query("password") String password);
 
     @FormUrlEncoded
     @POST("siropenapi/UserAccount/Login/")
-    Call<LoginResponseEntity> loginPost (@Field("userName") String userName, @Field("password") String password);
+    Call<LoginResponseEntity> loginPost(@Field("userName") String userName, @Field("password") String password);
+
+    @GET("siropenapi/UserAccount/Login")
+    Observable<LoginResponseEntity> loginGetRx(@Query("userName") String userName, @Query("password") String password);
+
+    @FormUrlEncoded
+    @POST("siropenapi/UserAccount/Login/")
+    Observable<LoginResponseEntity> loginPostRx(@Field("userName") String userName, @Field("password") String password);
+
 }
 

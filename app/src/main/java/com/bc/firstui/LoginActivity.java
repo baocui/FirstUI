@@ -27,6 +27,10 @@ import com.xuexiang.xutil.net.JsonUtil;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -122,16 +126,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 ReopenAppUtils.reopenApp(this);
                 break;
             case R.id.btn_login:
-                login();
+                String name = mEtName.getText().toString().trim();
+                String password = mEtPassword.getText().toString().trim();
+                login(name, password);
+                //loginRx(name, password);
                 break;
             default:
                 break;
         }
     }
 
-    private void login() {
+    private void login(String name, String password) {
         IApi api = NetManager.getInstance().getRetrofit().create(IApi.class);
-        Call<LoginResponseEntity> call = api.loginPost(mEtName.getText().toString().trim(), mEtPassword.getText().toString().trim());
+        Call<LoginResponseEntity> call = api.loginPost(name, password);
         call.enqueue(new Callback<LoginResponseEntity>() {
             @Override
             public void onResponse(Call<LoginResponseEntity> call, Response<LoginResponseEntity> response) {
@@ -141,9 +148,29 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             @Override
             public void onFailure(Call<LoginResponseEntity> call, Throwable t) {
-                Log.e("baocui", "onFailure" + t.getMessage());
+                Log.e("baocui", "onFailure: " + t.getMessage());
             }
         });
+    }
+
+    @SuppressLint("CheckResult")
+    private void loginRx(String name, String password) {
+        IApi api = NetManager.getInstance().getRetrofit().create(IApi.class);
+        Observable<LoginResponseEntity> observable = api.loginPostRx(name, password);
+        observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<LoginResponseEntity>() {
+                    @Override
+                    public void accept(LoginResponseEntity entity) throws Exception {
+                        MyApplication.Token = entity.Data.Token;
+                        Log.e("baocui", "accept success: " + JsonUtil.toJson(entity.Data));
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        Log.e("baocui", "accept fail" + throwable.getMessage());
+                    }
+                });
     }
 
     @Override
